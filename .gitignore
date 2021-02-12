@@ -1,0 +1,7 @@
+*.pyc
+*.vscode
+
+/bin
+/ignore
+/*.png
+/*.jpg
