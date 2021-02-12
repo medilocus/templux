@@ -3,6 +3,9 @@
 
 /bin
 /ignore
+
 /*.png
 /*.jpg
 /*.stl
+
+/a.py
