@@ -24,11 +24,17 @@ class Face:
     def __init__(self, verts) -> None:
         self.verts = verts
 
+    def __repr__(self):
+        return f"<Face {len(self.verts)} verts>"
+
 
 class Mesh:
     """Mesh class which stores faces and modifiers."""
     def __init__(self, faces: Tuple[Face]):
         self.faces = faces
+
+    def __repr__(self):
+        return f"<Mesh {len(self.faces)} faces>"
 
     @classmethod
     def from_stl_ascii(cls, path: str):
