@@ -31,4 +31,11 @@ class Mesh:
 
     @classmethod
     def from_stl_ascii(cls, path: str):
-        pass
+        solid_started = False
+        with open(path, "r") as file:
+            line = file.readline()
+
+            if not solid_started and not line.startswith("solid"):
+                raise ValueError("Bad ASCII file. Does not contain \"solid\" at the beginning.")
+            if line.startswith("solid"):
+                solid_started = True
