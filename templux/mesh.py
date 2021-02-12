@@ -21,7 +21,8 @@ from typing import Tuple
 
 
 class Face:
-    pass
+    def __init__(self, verts) -> None:
+        self.verts = verts
 
 
 class Mesh:
@@ -31,11 +32,20 @@ class Mesh:
 
     @classmethod
     def from_stl_ascii(cls, path: str):
-        solid_started = False
         with open(path, "r") as file:
-            line = file.readline()
+            data = file.read()
+            lines = data.strip().split("\n")
+        if not lines[0].startswith("solid"):
+            raise ValueError("First line does not start with \"solid\". Bad stl file.")
 
-            if not solid_started and not line.startswith("solid"):
-                raise ValueError("Bad ASCII file. Does not contain \"solid\" at the beginning.")
-            if line.startswith("solid"):
-                solid_started = True
+        faces = []
+        curr_verts = []
+        for line in lines:
+            if line.startswith("vertex"):
+                verts = list(map(float, line.replace("vertex", "").strip().split()))
+                curr_verts.append(verts)
+            if line.startswith("endloop"):
+                faces.append(Face(curr_verts))
+                curr_verts = []
+
+        return cls(faces)
