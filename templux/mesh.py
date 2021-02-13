@@ -30,6 +30,7 @@ class Face:
 
 class Mesh:
     """Mesh class which stores faces and modifiers."""
+
     def __init__(self, faces: Tuple[Face]):
         self.faces = faces
 
