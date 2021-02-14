@@ -27,6 +27,10 @@ class Face:
     def __repr__(self):
         return f"<Face {len(self.verts)} verts>"
 
+    def __iter__(self):
+        for v in self.verts:
+            yield v
+
 
 class Mesh:
     """Mesh class which stores faces and modifiers."""
