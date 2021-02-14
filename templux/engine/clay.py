@@ -18,16 +18,33 @@
 #
 
 from typing import Dict, Tuple
+from math import sin, cos, radians
 from ..mesh import Mesh
 
 
-def project():
-    pass
+def normalize(cam, loc):
+    res = cam["res"]
+    x = loc[0]/cam["size"]*res[0] + res[0]/2
+    y = loc[1]/cam["size"]*res[0] + res[1]/2
+    return (x, y)
 
 
-def render_solid(res: Tuple[int], meshes: Tuple[Mesh]) -> Dict:
-    pass
+def project(cam, loc):
+    x, y, z = loc
+    view_y, view_x = map(lambda x: radians(x), cam["pos"])
+
+    len_x = 0
+    len_y = 0
+
+    len_x += cos(view_x) * x
+    len_x += sin(view_x) * y
+
+    len_y += sin(view_x) * cos(view_y) * x
+    len_y -= cos(view_x) * cos(view_y) * y
+    len_y -= sin(view_y) * z
+
+    return (len_x, len_y)
 
 
-def render_wire(res: Tuple[int], meshes: Tuple[Mesh]) -> Dict:
+def render_wire(cam: Dict, meshes: Tuple[Mesh]) -> Dict:
     pass
