@@ -20,5 +20,5 @@
 from typing import Tuple
 
 
-def camera_ortho(pos: Tuple[float], size: float):
-    return {"type": "ORTHO", "pos": pos, "size": size}
+def camera_ortho(res: Tuple[int], pos: Tuple[float], size: float):
+    return {"type": "ORTHO", "res": res, "pos": pos, "size": size}
