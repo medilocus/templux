@@ -18,6 +18,7 @@
 #
 
 from typing import Any, Tuple
+import time
 import pygame
 from .camera import camera_ortho
 pygame.init()
@@ -36,6 +37,7 @@ def preview_ortho(engine, args: Tuple[Any]):
     width, height = 1280, 720
     last_width, last_height = 1280, 720
     resized = False
+    font = pygame.font.SysFont("ubuntu", 14)
 
     cam_pos = [0, 0]
     cam_size = 5
@@ -43,7 +45,7 @@ def preview_ortho(engine, args: Tuple[Any]):
     drag_start_angle = None
 
     while True:
-        clock.tick(60)
+        clock.tick(30)
         pygame.display.update()
         events = pygame.event.get()
         for event in events:
@@ -69,9 +71,14 @@ def preview_ortho(engine, args: Tuple[Any]):
                 elif event.button == 5:
                     cam_size *= 1.1
 
-        surface.fill((0, 0, 0))
+        start = time.time()
         image = engine(camera_ortho((width, height), cam_pos, cam_size), *args)
+        elapse = str(1000*(time.time()-start))[:6]
+        text = font.render(f"Rendering time: {elapse}ms", 1, (255, 255, 255))
+
+        surface.fill((0, 0, 0))
         surface.blit(image, (0, 0))
+        surface.blit(text, (10, 10))
 
         if pygame.mouse.get_pressed()[0]:
             pos = pygame.mouse.get_pos()
