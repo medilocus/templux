@@ -41,9 +41,9 @@ def project(cam, loc):
     len_x += cos(view_x) * x
     len_x += sin(view_x) * y
 
-    len_y += sin(view_x) * cos(view_y) * x
-    len_y -= cos(view_x) * cos(view_y) * y
-    len_y -= sin(view_y) * z
+    len_y -= sin(view_x) * cos(view_y) * x
+    len_y += cos(view_x) * cos(view_y) * y
+    len_y += sin(view_y) * z
 
     return (len_x, len_y)
 
