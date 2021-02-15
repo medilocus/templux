@@ -87,8 +87,7 @@ class Mesh:
 
         with open(path, "rb") as file:
             header = file.read(80)
-            num_tris = file.read(4)
-            num_tris = num_tris[0] + 2**8*num_tris[1] + 2**16*num_tris[2] + 2**24*num_tris[3]
+            num_tris = struct.unpack("<I", file.read(4))[0]
 
             for i in range(num_tris):
                 file.read(12)
@@ -114,6 +113,22 @@ class Mesh:
                     file.write(f"        vertex {x} {y} {z}\n")
                 file.write("    endloop\n")
                 file.write("endfacet\n")
+
+    def save_stl_bin(self, path: str, header: bytes = b""):
+        with open(path, "wb") as file:
+            header = header[:80]
+            header += b" " * (80-len(header))
+            num_tris = struct.pack("<I", len(self.faces))
+
+            file.write(header)
+            file.write(num_tris)
+            for face in self.faces:
+                normal = b"".join([struct.pack("f", nrm) for nrm in face.normal()])
+                file.write(normal)
+                for x, y, z in face:
+                    data = struct.pack("f", x) + struct.pack("f", y) + struct.pack("f", z)
+                    file.write(data)
+                file.write(b"  ")
 
     def triangulate(self):
         faces = []
