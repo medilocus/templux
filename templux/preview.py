@@ -39,6 +39,8 @@ def preview_ortho(engine, args: Tuple[Any]):
 
     cam_pos = [0, 0]
     cam_size = 5
+    drag_start_pos = None
+    drag_start_angle = None
 
     while True:
         clock.tick(60)
@@ -59,7 +61,10 @@ def preview_ortho(engine, args: Tuple[Any]):
                 resized = False
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 4:
+                if event.button == 1:
+                    drag_start_pos = pygame.mouse.get_pos()
+                    drag_start_angle = cam_pos[:]
+                elif event.button == 4:
                     cam_size /= 1.1
                 elif event.button == 5:
                     cam_size *= 1.1
@@ -67,3 +72,10 @@ def preview_ortho(engine, args: Tuple[Any]):
         surface.fill((0, 0, 0))
         image = engine(camera_ortho((width, height), cam_pos, cam_size), *args)
         surface.blit(image, (0, 0))
+
+        if pygame.mouse.get_pressed()[0]:
+            pos = pygame.mouse.get_pos()
+            pos_diff = [pos[0]-drag_start_pos[0], pos[1]-drag_start_pos[1]]
+            pos_diff.reverse()
+            pos_diff = [x/2 for x in pos_diff]
+            cam_pos = [drag_start_angle[0]+pos_diff[0], drag_start_angle[1]+pos_diff[1]]
