@@ -48,7 +48,14 @@ def project(cam, loc):
     return (len_x, len_y)
 
 
-def render_wire(cam: Dict, meshes: Tuple[Mesh], color: Tuple[int], thickness: int = 2) -> Dict:
+def render_wire(cam: Dict, meshes: Tuple[Mesh], color: Tuple[int], thickness: int = 2):
+    """
+    Renders meshes as wireframe.
+    :param cam: Dictionary containing camera data.
+    :param meshes: List of meshes to render.
+    :param color: Color of wireframe.
+    :param thickness: Thickness of wireframe.
+    """
     surface = pygame.Surface(cam["res"], pygame.SRCALPHA)
 
     for mesh in meshes:
@@ -60,3 +67,12 @@ def render_wire(cam: Dict, meshes: Tuple[Mesh], color: Tuple[int], thickness: in
             pygame.draw.line(surface, color, locs[1], locs[2], thickness)
 
     return surface
+
+
+def render_solid(cam: Dict, meshes: Tuple[Mesh], matcap: pygame.Surface) -> pygame.Surface:
+    """
+    Renders meshes with matcap.
+    :param cam: Dictionary containing camera data.
+    :param meshes: List of meshes to render.
+    :param matcap: Matcap pygame surface.
+    """
