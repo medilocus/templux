@@ -23,7 +23,7 @@ pygame.init()
 
 
 def preview():
-    pygame.display.set_caption("Graphic Videos - GUI")
+    pygame.display.set_caption("Templux Preview")
     surface = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
 
     clock = pygame.time.Clock()
