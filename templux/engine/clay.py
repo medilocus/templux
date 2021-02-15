@@ -21,7 +21,7 @@ from typing import Dict, Tuple
 from math import sin, cos, radians, sqrt
 import numpy as np
 import pygame
-from ..mesh import Mesh
+from ..mesh import Mesh, Face
 pygame.init()
 
 
@@ -77,6 +77,76 @@ def matcap_pos(normal, size):
     return list(map(int, (x_loc, y_loc)))
 
 
+def dist_to_cam(cam, face):
+    cam_dist = 1000
+    cam_rot_y, cam_rot_x = map(radians, cam["pos"])
+    cam_z = cam_dist * cos(cam_rot_y)
+    cam_x = cam_dist * sin(cam_rot_x) * sin(cam_rot_y)
+    cam_y = cam_dist * cos(cam_rot_x) * sin(cam_rot_y) * -1
+
+    # dist = 0
+    # for x, y, z in face:
+    #     dist += sqrt((cam_x-x)**2 + (cam_y-y)**2 + (cam_z-z)**2)
+    # dist /= 3
+
+    #dist = max([sqrt((cam_x-x)**2 + (cam_y-y)**2 + (cam_z-z)**2) for x, y, z in face])
+
+    avg_point = [0, 0, 0]
+    for x, y, z in face:
+        avg_point[0] += x
+        avg_point[1] += y
+        avg_point[2] += z
+    x, y, z = [x/3 for x in avg_point]
+    dist = sqrt((cam_x-x)**2 + (cam_y-y)**2 + (cam_z-z)**2)
+
+    return dist
+
+
+def avg_vert(face):
+    avg_point = [0, 0, 0]
+    for x, y, z in face:
+        avg_point[0] += x
+        avg_point[1] += y
+        avg_point[2] += z
+    x, y, z = [x/3 for x in avg_point]
+
+    return (x, y, z)
+
+
+def sort_face_priority(cam, faces):
+    sorted_faces = []
+    cam_dist = 1000
+    cam_rot_y, cam_rot_x = map(radians, cam["pos"])
+    cam_z = cam_dist * cos(cam_rot_y)
+    cam_x = cam_dist * sin(cam_rot_x) * sin(cam_rot_y)
+    cam_y = cam_dist * cos(cam_rot_x) * sin(cam_rot_y)
+
+    for face in faces:
+        x, y, z = avg_vert(face)
+        i = None
+        for i in range(len(sorted_faces)):
+            cx, cy, cz = avg_vert(sorted_faces[i])
+            if cz > z and cam_z >= 0:
+                break
+            if cz < z and cam_z <= 0:
+                break
+            if cx > x and cam_x >= 0:
+                break
+            if cx < x and cam_x <= 0:
+                break
+            if cy > y and cam_y >= 0:
+                break
+            if cy < y and cam_y <= 0:
+                break
+
+        if i is None:
+            sorted_faces.append(face)
+        else:
+            sorted_faces.insert(i, face)
+
+    return sorted_faces
+
+
 def render_wire(cam: Dict, meshes: Tuple[Mesh], color: Tuple[int], thickness: int = 2):
     """
     Renders meshes as wireframe.
@@ -109,6 +179,8 @@ def render_solid(cam: Dict, meshes: Tuple[Mesh], matcap: pygame.Surface) -> pyga
     faces = []
     for mesh in meshes:
         faces.extend(mesh.faces)
+    #faces.sort(key=lambda face: dist_to_cam(cam, face), reverse=True)
+    faces = sort_face_priority(cam, faces)
 
     for face in faces:
         vert_locs = [project(cam, vert) for vert in face]
