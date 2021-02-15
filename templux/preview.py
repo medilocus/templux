@@ -58,6 +58,12 @@ def preview_ortho(engine, args: Tuple[Any]):
                 surface = pygame.display.set_mode((width, height), pygame.RESIZABLE)
                 resized = False
 
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 4:
+                    cam_size /= 1.1
+                elif event.button == 5:
+                    cam_size *= 1.1
+
         surface.fill((0, 0, 0))
         image = engine(camera_ortho((width, height), cam_pos, cam_size), *args)
         surface.blit(image, (0, 0))
