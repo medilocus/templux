@@ -18,6 +18,7 @@
 #
 
 from typing import Tuple
+import struct
 
 
 class Face:
@@ -58,5 +59,27 @@ class Mesh:
             if line.startswith("endloop"):
                 faces.append(Face(curr_verts))
                 curr_verts = []
+
+        return cls(faces)
+
+    @classmethod
+    def from_stl_bin(cls, path: str):
+        faces = []
+
+        with open(path, "rb") as file:
+            header = file.read(80)
+            num_tris = file.read(4)
+            num_tris = num_tris[0] + 2**8*num_tris[1] + 2**16*num_tris[2] + 2**24*num_tris[3]
+
+            for i in range(num_tris):
+                file.read(12)
+
+                verts = []
+                verts.append([struct.unpack("f", file.read(4))[0] for _ in range(3)])
+                verts.append([struct.unpack("f", file.read(4))[0] for _ in range(3)])
+                verts.append([struct.unpack("f", file.read(4))[0] for _ in range(3)])
+
+                faces.append(Face(verts))
+                file.read(2)
 
         return cls(faces)
