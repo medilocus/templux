@@ -50,7 +50,6 @@ def preview_ortho(engine, args: Tuple[Any]):
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
-                pygame.quit()
                 return
 
             elif event.type == pygame.VIDEORESIZE:
