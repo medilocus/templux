@@ -22,4 +22,4 @@ __version__ = "0.1"
 from .mesh import Mesh
 from .camera import *
 from .engine import clay as eng_clay
-from .preview import preview
+from .preview import preview_ortho
