@@ -19,6 +19,7 @@
 
 from typing import Dict, Tuple
 from math import sin, cos, radians
+import numpy as np
 import pygame
 from ..mesh import Mesh
 pygame.init()
@@ -46,6 +47,18 @@ def project(cam, loc):
     len_y += sin(view_y) * z
 
     return (len_x, len_y)
+
+
+def normal(vert):
+    p1, p2, p3 = map(np.array, vert)
+    a = p2 - p1
+    b = p3 - p1
+
+    nx = a[1]*b[2] - a[2]*b[1]
+    ny = a[2]*b[0] - a[0]*b[2]
+    nz = a[0]*b[1] - a[1]*b[0]
+
+    return (nx, ny, nz)
 
 
 def render_wire(cam: Dict, meshes: Tuple[Mesh], color: Tuple[int], thickness: int = 2):
