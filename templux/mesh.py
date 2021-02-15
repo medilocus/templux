@@ -32,9 +32,12 @@ class Face:
         for v in self.verts:
             yield v
 
+    def __len__(self):
+        return len(self.verts)
+
 
 class Mesh:
-    """Mesh class which stores faces and modifiers."""
+    """Mesh class which stores faces."""
 
     def __init__(self, faces: Tuple[Face]):
         self.faces = faces
@@ -83,3 +86,16 @@ class Mesh:
                 file.read(2)
 
         return cls(faces)
+
+    def triangulate(self):
+        faces = []
+
+        for face in self.faces:
+            if len(face) == 3:
+                faces.append(face)
+            else:
+                for i in range(1, len(face)-1):
+                    curr_face = Face(face[0], face[i], face[i+1])
+                    faces.append(curr_face)
+
+        return Mesh(faces)
