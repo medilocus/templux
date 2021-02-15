@@ -49,8 +49,8 @@ def project(cam, loc):
     return (len_x, len_y)
 
 
-def normal(vert):
-    p1, p2, p3 = map(np.array, vert)
+def normal(face):
+    p1, p2, p3 = map(np.array, face)
     a = p2 - p1
     b = p3 - p1
 
@@ -69,7 +69,12 @@ def matcap_pos(normal, size):
     x_loc = size_x * (px+1) / 2
     y_loc = size_y * (1-pz) / 2
 
-    return (x_loc, y_loc)
+    if x_loc >= size_x:
+        x_loc = size_x - 1
+    if y_loc >= size_y:
+        y_loc = size_y - 1
+
+    return list(map(int, (x_loc, y_loc)))
 
 
 def render_wire(cam: Dict, meshes: Tuple[Mesh], color: Tuple[int], thickness: int = 2):
@@ -104,5 +109,12 @@ def render_solid(cam: Dict, meshes: Tuple[Mesh], matcap: pygame.Surface) -> pyga
     faces = []
     for mesh in meshes:
         faces.extend(mesh.faces)
+
+    for face in faces:
+        vert_locs = [project(cam, vert) for vert in face]
+        vert_locs = [normalize(cam, vert) for vert in vert_locs]
+        mtcp_pos = matcap_pos(normal(face), matcap.get_size())
+        color = matcap.get_at(mtcp_pos)
+        pygame.draw.polygon(surface, color, vert_locs)
 
     return surface
