@@ -19,7 +19,9 @@
 
 from typing import Dict, Tuple
 from math import sin, cos, radians
+import pygame
 from ..mesh import Mesh
+pygame.init()
 
 
 def normalize(cam, loc):
@@ -46,15 +48,15 @@ def project(cam, loc):
     return (len_x, len_y)
 
 
-def render_wire(cam: Dict, meshes: Tuple[Mesh], color: Tuple[int]) -> Dict:
-    data = {"type": "WIRE", "color": color, "res": cam["res"], "lines": []}
+def render_wire(cam: Dict, meshes: Tuple[Mesh], color: Tuple[int], thickness: int = 2) -> Dict:
+    surface = pygame.Surface(cam["res"], pygame.SRCALPHA)
 
     for mesh in meshes:
         for face in mesh.faces:
             locs = [project(cam, v) for v in face]
             locs = [normalize(cam, l) for l in locs]
-            data["lines"].append((locs[0], locs[1]))
-            data["lines"].append((locs[0], locs[2]))
-            data["lines"].append((locs[1], locs[2]))
+            pygame.draw.line(surface, color, locs[0], locs[1], thickness)
+            pygame.draw.line(surface, color, locs[0], locs[2], thickness)
+            pygame.draw.line(surface, color, locs[1], locs[2], thickness)
 
-    return data
+    return surface
