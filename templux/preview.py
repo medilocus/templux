@@ -19,10 +19,16 @@
 
 from typing import Any, Tuple
 import pygame
+from .camera import camera_ortho
 pygame.init()
 
 
-def preview():
+def preview_ortho(engine, args: Tuple[Any]):
+    """
+    Opens a preview window.
+    :param engine: Function to do the rendering.
+    :param args: List of arguments to pass to the engine, excluding the first (camera).
+    """
     pygame.display.set_caption("Templux Preview")
     surface = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
 
@@ -30,6 +36,9 @@ def preview():
     width, height = 1280, 720
     last_width, last_height = 1280, 720
     resized = False
+
+    cam_pos = [0, 0]
+    cam_size = 5
 
     while True:
         clock.tick(60)
@@ -50,3 +59,5 @@ def preview():
                 resized = False
 
         surface.fill((0, 0, 0))
+        image = engine(camera_ortho((width, height), cam_pos, cam_size), *args)
+        surface.blit(image, (0, 0))
