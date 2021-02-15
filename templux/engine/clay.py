@@ -49,18 +49,6 @@ def project(cam, loc):
     return (len_x, len_y)
 
 
-def normal(face):
-    p1, p2, p3 = map(np.array, face)
-    a = p2 - p1
-    b = p3 - p1
-
-    nx = a[1]*b[2] - a[2]*b[1]
-    ny = a[2]*b[0] - a[0]*b[2]
-    nz = a[0]*b[1] - a[1]*b[0]
-
-    return (nx, ny, nz)
-
-
 def matcap_pos(normal, size):
     size_x, size_y = size
     mag = sqrt(sum([x**2 for x in normal]))
@@ -185,7 +173,7 @@ def render_solid(cam: Dict, meshes: Tuple[Mesh], matcap: pygame.Surface) -> pyga
     for face in faces:
         vert_locs = [project(cam, vert) for vert in face]
         vert_locs = [normalize(cam, vert) for vert in vert_locs]
-        mtcp_pos = matcap_pos(normal(face), matcap.get_size())
+        mtcp_pos = matcap_pos(face.normal(), matcap.get_size())
         color = matcap.get_at(mtcp_pos)
         pygame.draw.polygon(surface, color, vert_locs)
 

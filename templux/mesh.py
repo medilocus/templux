@@ -19,6 +19,7 @@
 
 from typing import Tuple
 import struct
+import numpy as np
 
 
 class Face:
@@ -34,6 +35,17 @@ class Face:
 
     def __len__(self):
         return len(self.verts)
+
+    def normal(self):
+        p1, p2, p3 = map(np.array, self.verts)
+        a = p2 - p1
+        b = p3 - p1
+
+        nx = a[1]*b[2] - a[2]*b[1]
+        ny = a[2]*b[0] - a[0]*b[2]
+        nz = a[0]*b[1] - a[1]*b[0]
+
+        return (nx, ny, nz)
 
 
 class Mesh:
