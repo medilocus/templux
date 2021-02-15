@@ -65,7 +65,7 @@ class Mesh:
     def from_stl_ascii(cls, path: str):
         with open(path, "r") as file:
             data = file.read()
-            lines = data.strip().split("\n")
+            lines = [l.strip() for l in data.strip().split("\n")]
         if not lines[0].startswith("solid"):
             raise ValueError("First line does not start with \"solid\". Bad stl file.")
 
@@ -102,6 +102,18 @@ class Mesh:
                 file.read(2)
 
         return cls(faces)
+
+    def save_stl_ascii(self, path: str, name: str = ""):
+        with open(path, "w") as file:
+            file.write(f"solid {name}\n")
+            for face in self.faces:
+                normal = face.normal()
+                file.write(f"facet normal {normal[0]} {normal[1]} {normal[2]}\n")
+                file.write("    outer loop\n")
+                for x, y, z in face:
+                    file.write(f"        vertex {x} {y} {z}\n")
+                file.write("    endloop\n")
+                file.write("endfacet\n")
 
     def triangulate(self):
         faces = []
