@@ -18,7 +18,7 @@
 #
 
 from typing import Dict, Tuple
-from math import sin, cos, radians
+from math import atan, sin, cos, radians, sqrt
 import numpy as np
 import pygame
 from ..mesh import Mesh
@@ -59,6 +59,17 @@ def normal(vert):
     nz = a[0]*b[1] - a[1]*b[0]
 
     return (nx, ny, nz)
+
+
+def matcap_pos(normal, size):
+    size_x, size_y = size
+    mag = sqrt(sum([x**2 for x in normal]))
+    px, py, pz = np.array(normal) / mag
+
+    x_loc = size_x * (px+1) / 2
+    y_loc = size_y * (1-pz) / 2
+
+    return (x_loc, y_loc)
 
 
 def render_wire(cam: Dict, meshes: Tuple[Mesh], color: Tuple[int], thickness: int = 2):
