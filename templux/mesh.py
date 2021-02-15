@@ -1,6 +1,6 @@
 #
-#  Graphic Videos
-#  An API for creating graphic videos in Python.
+#  Templux
+#  3D rendering engine for Python.
 #  Copyright Medilocus 2021
 #
 #  This program is free software: you can redistribute it and/or modify
