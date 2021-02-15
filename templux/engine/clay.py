@@ -76,3 +76,9 @@ def render_solid(cam: Dict, meshes: Tuple[Mesh], matcap: pygame.Surface) -> pyga
     :param meshes: List of meshes to render.
     :param matcap: Matcap pygame surface.
     """
+    surface = pygame.Surface(cam["res"], pygame.SRCALPHA)
+    faces = []
+    for mesh in meshes:
+        faces.extend(mesh.faces)
+
+    return surface
