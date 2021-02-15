@@ -75,7 +75,17 @@ def preview_ortho(engine, args: Tuple[Any]):
 
         if pygame.mouse.get_pressed()[0]:
             pos = pygame.mouse.get_pos()
+
             pos_diff = [pos[0]-drag_start_pos[0], pos[1]-drag_start_pos[1]]
             pos_diff.reverse()
             pos_diff = [x/2 for x in pos_diff]
             cam_pos = [drag_start_angle[0]+pos_diff[0], drag_start_angle[1]+pos_diff[1]]
+
+            if pos[0] >= width-5:
+                pygame.mouse.set_pos((10, pos[1]))
+            elif pos[0] <= 5:
+                pygame.mouse.set_pos((width-10, pos[1]))
+            if pos[1] >= height-5:
+                pygame.mouse.set_pos((pos[0], 10))
+            elif pos[1] <= 5:
+                pygame.mouse.set_pos((pos[0], height-10))
