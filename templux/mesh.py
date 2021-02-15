@@ -23,6 +23,8 @@ import numpy as np
 
 
 class Face:
+    verts: Tuple[Tuple[float]]
+
     def __init__(self, verts) -> None:
         self.verts = verts
 
@@ -50,6 +52,8 @@ class Face:
 
 class Mesh:
     """Mesh class which stores faces."""
+
+    faces: Tuple[Face]
 
     def __init__(self, faces: Tuple[Face]):
         self.faces = faces
