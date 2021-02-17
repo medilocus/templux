@@ -1,1 +1,3 @@
 matcap1.jpg: CC0 (public domain), from Blender 2.92
+
+cube.stl: Cube model, CC0 (public domain), from Blender 2.92
